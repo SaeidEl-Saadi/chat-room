@@ -1,0 +1,21 @@
+{
+  "name": "chat-room",
+  "version": "1.0.0",
+  "description": "A chat room that I made for fun and as an excuse to learn React. The chat room is hosted on a private ip.",
+  "homepage": "https://github.com/SaeidEl-Saadi/chat-room#readme",
+  "bugs": {
+    "url": "https://github.com/SaeidEl-Saadi/chat-room/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SaeidEl-Saadi/chat-room.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  }
+}
