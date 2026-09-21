@@ -1,2 +1,7 @@
 # chat-room
-A chat room that I made for fun and as an excuse to learn React. The chat room is hosted on a private ip.
+A chat room that I made for fun. The chat room is hosted on a private ip.
+
+# To run
+-npm install all the dependencies
+-set up env file for ip and port (localhost and port 3000 are default if not)
+-run npm start
