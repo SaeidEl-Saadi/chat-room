@@ -29,6 +29,10 @@ Promise.all([
 
 app.use(express.static("public"));
 
+app.get("/health", (req, res) => {
+    res.status(200).json({ status: "ok" });
+});
+
 io.on("connection", (socket) => {
     console.log(`${socket.id} connected to ${os.hostname()}`);
 
