@@ -1,6 +1,9 @@
 const express = require("express");
+const os = require("os");
 const http = require("http");
 const { Server } = require("socket.io");
+const { createAdapter } = require("@socket.io/redis-adapter");
+const { createClient } = require("redis");
 
 const app = express();
 const server = http.createServer(app);
@@ -8,13 +11,26 @@ const io = new Server(server);
 const users = require("./users");
 
 require("dotenv").config();
-const HOST = process.env.HOST != null ? process.env.HOST : "127.0.0.1";
+const HOST = process.env.HOST != null ? process.env.HOST : "0.0.0.0";
 const PORT = process.env.PORT != null ? process.env.PORT : 3000;
+
+const pubClient = createClient({
+    url: "redis://redis:6379"
+});
+
+const subClient = pubClient.duplicate();
+
+Promise.all([
+    pubClient.connect(),
+    subClient.connect()
+]).then(() => {
+    io.adapter(createAdapter(pubClient, subClient));
+});
 
 app.use(express.static("public"));
 
 io.on("connection", (socket) => {
-    console.log(`${socket.id} connected`);
+    console.log(`${socket.id} connected to ${os.hostname()}`);
 
     socket.on("chat", (msg) => {
         const user = users.getUser(socket.id);
