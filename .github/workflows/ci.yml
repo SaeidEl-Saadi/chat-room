@@ -1,0 +1,16 @@
+name: Chat Room CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t chat-room .
