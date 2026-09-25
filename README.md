@@ -16,6 +16,8 @@ The project also includes Kubernetes deployment configuration, Terraform infrast
 - Kubernetes
 - Terraform
 - GitHub Actions
+- GitHub Container Registry (GHCR)
+- Argo CD
 
 ## Architecture
 
@@ -73,10 +75,11 @@ Apply the resources:
 kubectl apply -f kubernetes/
 ```
 
-Check the running pods:
+Check the application:
 
 ```bash
 kubectl get pods
+kubectl get services
 ```
 
 Forward the chat service to your local machine:
@@ -90,6 +93,9 @@ Then open:
 ```text
 http://localhost:3000
 ```
+
+> [!NOTE]
+> When using the Argo CD deployment, Kubernetes manifests are managed through  Git rather than manually applying changes with `kubectl`.
 
 ## Terraform
 
@@ -115,7 +121,7 @@ terraform apply
 
 The Terraform configuration manages a dedicated Kubernetes namespace containing the chat and Redis infrastructure.
 
-## CI
+## CI/CD
 
 GitHub Actions runs automatically on pushes and pull requests.
 
@@ -124,6 +130,25 @@ The CI pipeline:
 - Builds the Docker image
 - Validates the Docker Compose configuration
 - Checks Terraform formatting
-- Initializes Terraform
-- Validates the Terraform configuration
+- Initializes and validates the Terraform configuration
+- Tags container images using the Git commit SHA
+- Pushes container images to GitHub Container Registry (GHCR)
 
+For deployments, GitHub Actions updates the Kubernetes manifest with the new SHA-versioned image. Argo CD detects the change and automatically synchronizes the desired state with the Kubernetes cluster.
+
+This provides a GitOps-based continuous deployment workflow:
+
+```text
+Git Push
+   ↓
+GitHub Actions
+   ↓
+Build & Validate
+   ↓
+Push SHA-tagged image to GHCR
+   ↓
+Update Kubernetes manifest
+   ↓
+Argo CD
+   ↓
+Kubernetes Rolling Deployment
