@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: chat
-          image: chat-room:v2
+          image: ghcr.io/saeidel-saadi/chat-room:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
